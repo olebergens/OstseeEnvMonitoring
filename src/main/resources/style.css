@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
 
 .root {
-    -fx-background-color: #f5f5f5;
+    -fx-background-color: rgba(221, 228, 229, 0.4);
     -fx-font-family: 'Roboto', sans-serif;
 }
 
@@ -11,7 +11,7 @@
 }
 
 .date-picker > .jfx-date-picker-content > .jfx-date-picker-display-node {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #3b3838;
     -fx-text-fill: #212121;
     -fx-font-size: 14px;
 }
@@ -29,7 +29,7 @@
 }
 
 .checkbox > .box > .mark > .check {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #24242d;
 }
 
 .checkbox > .box > .mark > .check-icon {
@@ -41,7 +41,7 @@
 }
 
 .chart-legend > .chart-legend-item > .symbol > .symbol-container > .symbol {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #33526c;
 }
 
 .chart-legend > .chart-legend-item > .text {
@@ -54,7 +54,7 @@
 }
 
 .chart-legend > .chart-legend-item > .text > .chart-legend-item-legend-symbol > .symbol-container > .symbol {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #33526c;
 }
 
 .chart-legend > .chart-legend-item > .text > .chart-legend-item-legend-symbol > .symbol-container > .symbol > .symbol-shape {
@@ -62,11 +62,11 @@
 }
 
 .chart-legend > .chart-legend-item > .text > .chart-legend-item-legend-symbol > .symbol-container > .symbol > .symbol-shape > .symbol-line {
-    -fx-stroke: #ffffff;
+    -fx-stroke: #33526c;
 }
 
 .chart-legend > .chart-legend-item > .text > .chart-legend-item-legend-symbol > .symbol-container > .symbol > .symbol-shape > .symbol-line > .symbol-line-stroke {
-    -fx-stroke: #ffffff;
+    -fx-stroke: #33526c;
 }
 
 .chart-legend > .chart-legend-item > .text > .chart-legend-item-legend-symbol > .symbol-container > .symbol > .symbol-shape > .symbol-line > .symbol-line-stroke > .symbol-line-stroke-width {
