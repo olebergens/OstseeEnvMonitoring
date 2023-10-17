@@ -114,6 +114,7 @@ class MaxMinValuesView : View("Min/Max Values") {
                 add(waterTempMinVal)
             }
             vbox(30.0) {
+                padding = insets(0.0, 0.0, 0.0, -10.0)
                 add(timeTempMinVal)
                 add(timeHumidityMinVal)
                 add(timePressureMinVal)
@@ -132,6 +133,7 @@ class MaxMinValuesView : View("Min/Max Values") {
                 add(waterTempMaxVal)
             }
             vbox(30.0) {
+                padding = insets(0.0, 0.0, 0.0, -10.0)
                 add(timeTempMaxVal)
                 add(timeHumidityMaxVal)
                 add(timePressureMaxVal)
@@ -147,38 +149,80 @@ class MaxMinValuesView : View("Min/Max Values") {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
         val filteredData = sensorDataList.filter { it.timestamp in fromDatepicker.value.atStartOfDay()..toDatepicker.value.atTime(LocalTime.MAX) }
-        tempMinVal.text = "Minimum: ${filteredData.minByOrNull { it.temperature!! }}"
-        tempMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.temperature!! }}"
 
-        humidityMinVal.text = "Minimum: ${filteredData.minByOrNull { it.humidity!! }}"
-        humidityMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.humidity!! }}"
+        tempMinVal.text = "Minimum: ${filteredData.minByOrNull { it.temperature!! }!!.temperature}"
+        tempMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.temperature!! }!!.temperature}"
+        timeTempMinVal.text = "at: ${filteredData.minByOrNull { it.temperature!! }!!.timestamp}"
+        timeTempMaxVal.text = "at: ${filteredData.maxByOrNull { it.temperature!! }!!.timestamp}"
 
-        pressureMinVal.text = "Minimum: ${filteredData.minByOrNull { it.pressure!! }}"
-        pressureMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.pressure!! }}"
+        humidityMinVal.text = "Minimum: ${filteredData.minByOrNull { it.humidity!! }!!.humidity}"
+        humidityMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.humidity!! }!!.humidity}"
+        timeHumidityMinVal.text = "at: ${filteredData.minByOrNull { it.humidity!! }!!.timestamp}"
+        timeHumidityMaxVal.text = "at: ${filteredData.maxByOrNull { it.humidity!! }!!.timestamp}"
 
-        oxygenMinVal.text = "Minimum: ${filteredData.minByOrNull { it.oxygenContent!! }}"
-        oxygenMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.oxygenContent!! }}"
+        pressureMinVal.text = "Minimum: ${filteredData.minByOrNull { it.pressure!! }!!.pressure}"
+        pressureMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.pressure!! }!!.pressure}"
+        timePressureMinVal.text = "at: ${filteredData.minByOrNull { it.pressure!! }!!.timestamp}"
+        timePressureMaxVal.text = "at: ${filteredData.maxByOrNull { it.pressure!! }!!.timestamp}"
 
-        salinityMinVal.text = "Minimum: ${filteredData.minByOrNull { it.salinity!! }}"
-        salinityMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.salinity!! }}"
+        oxygenMinVal.text = "Minimum: ${filteredData.minByOrNull { it.oxygenContent!! }!!.oxygenContent}"
+        oxygenMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.oxygenContent!! }!!.oxygenContent}"
+        timeOxygenMinVal.text = "at: ${filteredData.minByOrNull { it.oxygenContent!! }!!.timestamp}"
+        timeOxygenMaxVal.text = "at: ${filteredData.maxByOrNull { it.oxygenContent!! }!!.timestamp}"
 
-        turbidityMinVal.text = "Minimum: ${filteredData.minByOrNull { it.turbidity!! }}"
-        turbidityMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.turbidity!! }}"
+        salinityMinVal.text = "Minimum: ${filteredData.minByOrNull { it.salinity!! }!!.salinity}"
+        salinityMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.salinity!! }!!.salinity}"
+        timeSalinityMinVal.text = "at: ${filteredData.minByOrNull { it.salinity!! }!!.timestamp}"
+        timeSalinityMaxVal.text = "at: ${filteredData.maxByOrNull { it.salinity!! }!!.timestamp}"
 
-        waterTempMinVal.text = "Minimum: ${filteredData.minByOrNull { it.waterTemperature!! }}"
-        waterTempMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.waterTemperature!! }}"
+        turbidityMinVal.text = "Minimum: ${filteredData.minByOrNull { it.turbidity!! }!!.turbidity}"
+        turbidityMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.turbidity!! }!!.turbidity}"
+        timeTurbidityMinVal.text = "at: ${filteredData.minByOrNull { it.turbidity!! }!!.timestamp}"
+        timeTurbidityMaxVal.text = "at: ${filteredData.maxByOrNull { it.turbidity!! }!!.timestamp}"
+
+        waterTempMinVal.text = "Minimum: ${filteredData.minByOrNull { it.waterTemperature!! }!!.waterTemperature}"
+        waterTempMaxVal.text = "Maximum: ${filteredData.maxByOrNull { it.waterTemperature!! }!!.waterTemperature}"
+        timeWaterTempMinVal.text = "at: ${filteredData.minByOrNull { it.waterTemperature!! }!!.timestamp}"
+        timeWaterTempMaxVal.text = "at: ${filteredData.maxByOrNull { it.waterTemperature!! }!!.timestamp}"
     }
 
     private fun updateAllData() {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
-        val filteredData = sensorDataList.filter { it.timestamp in fromDatepicker.value.atStartOfDay()..toDatepicker.value.atTime(LocalTime.MAX) }
-        val temperatureValues = filteredData.map { it.temperature }
-        val humidityValues = filteredData.map { it.humidity }
-        val pressureValues = filteredData.map { it.pressure }
-        val oxygenContentValues = filteredData.map { it.oxygenContent }
-        val salinityValues = filteredData.map { it.salinity }
-        val turbidityValues = filteredData.map { it.turbidity }
-        val waterTemperatureValues = filteredData.map { it.waterTemperature }
+        tempMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.temperature!! }!!.temperature}"
+        tempMaxVal.text = "Maximum: ${sensorDataList.maxByOrNull { it.temperature!! }!!.temperature}"
+        timeTempMinVal.text = "at: ${sensorDataList.minByOrNull { it.temperature!! }!!.timestamp}"
+        timeTempMaxVal.text = "at: ${sensorDataList.maxByOrNull { it.temperature!! }!!.timestamp}"
+
+        humidityMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.humidity!! }!!.humidity}"
+        humidityMaxVal.text = "Maximum: ${sensorDataList.maxByOrNull { it.humidity!! }!!.humidity}"
+        timeHumidityMinVal.text = "at: ${sensorDataList.minByOrNull { it.humidity!! }!!.timestamp}"
+        timeHumidityMaxVal.text = "at: ${sensorDataList.maxByOrNull { it.humidity!! }!!.timestamp}"
+
+        pressureMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.pressure!! }!!.pressure}"
+        pressureMaxVal.text = "Maximum: ${sensorDataList.maxByOrNull { it.pressure!! }!!.pressure}"
+        timePressureMinVal.text = "at: ${sensorDataList.minByOrNull { it.pressure!! }!!.timestamp}"
+        timePressureMaxVal.text = "at: ${sensorDataList.maxByOrNull { it.pressure!! }!!.timestamp}"
+
+        oxygenMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.oxygenContent!! }!!.oxygenContent}"
+        oxygenMaxVal.text = "Maximum: ${sensorDataList.maxByOrNull { it.oxygenContent!! }!!.oxygenContent}"
+        timeOxygenMinVal.text = "at: ${sensorDataList.minByOrNull { it.oxygenContent!! }!!.timestamp}"
+        timeOxygenMaxVal.text = "at: ${sensorDataList.maxByOrNull { it.oxygenContent!! }!!.timestamp}"
+
+        salinityMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.salinity!! }!!.salinity}"
+        salinityMaxVal.text = "Maximum: ${sensorDataList.maxByOrNull { it.salinity!! }!!.salinity}"
+        timeSalinityMinVal.text = "at: ${sensorDataList.minByOrNull { it.salinity!! }!!.timestamp}"
+        timeSalinityMaxVal.text = "at: ${sensorDataList.maxByOrNull { it.salinity!! }!!.timestamp}"
+
+        turbidityMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.turbidity!! }!!.turbidity}"
+        turbidityMaxVal.text = "Maximum: ${sensorDataList.maxByOrNull { it.turbidity!! }!!.turbidity}"
+        timeTurbidityMinVal.text = "at: ${sensorDataList.minByOrNull { it.turbidity!! }!!.timestamp}"
+        timeTurbidityMaxVal.text = "at: ${sensorDataList.maxByOrNull { it.turbidity!! }!!.timestamp}"
+
+        waterTempMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.waterTemperature!! }!!.waterTemperature}"
+        waterTempMaxVal.text = "Maximum: ${sensorDataList.maxByOrNull { it.waterTemperature!! }!!.waterTemperature}"
+        timeWaterTempMinVal.text = "at: ${sensorDataList.minByOrNull { it.waterTemperature!! }!!.timestamp}"
+        timeWaterTempMaxVal.text = "at: ${sensorDataList.maxByOrNull { it.waterTemperature!! }!!.timestamp}"
+
     }
 }

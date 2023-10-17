@@ -46,6 +46,10 @@ class SensorDataGraphView : View("Data Graph") {
         showTurbidity.addListener { _, _, _ -> updateChart() }
         showWaterTemperature.addListener { _, _, _ -> updateChart() }
 
+        showFilteredData.addListener { _, _, _ ->
+            updateChart()
+        }
+
         fromDatepicker.valueProperty().addListener { _, _, _ -> if (showFilteredData.get()) updateChart() }
         toDatepicker.valueProperty().addListener { _, _, _ -> if (showFilteredData.get()) updateChart() }
     }
