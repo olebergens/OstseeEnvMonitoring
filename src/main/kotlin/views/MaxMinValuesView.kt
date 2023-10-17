@@ -13,13 +13,17 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.math.sqrt
 
+// MaxMinValuesView erbt TornadoFX View und repräsentiert den Screen der die Minima und Maxima ausgibt
 class MaxMinValuesView : View("Min/Max Values") {
+    // Sensor-Datenliste aus der Datenbank laden
     private val sensorDataList = DataBaseHandler("jdbc:mysql://localhost:3306", "root", "Blubber02!").getSensorData()
 
+    // UI-Elemente und Eigenschaften für die Filterung und Anzeige von Sensor-Daten
     private val fromDatepicker = datepicker { value = LocalDate.now().minusDays(7) }
     private val toDatepicker = datepicker { value = LocalDate.now() }
     private val showFilteredData = SimpleBooleanProperty(false)
 
+    // Labels für die Zeitstempel der Min-Werte der verschiedenen Sensor-Daten
     private val timeTempMinVal = Label("Timestamp: ")
     private val timeHumidityMinVal = Label("Timestamp: ")
     private val timePressureMinVal = Label("Timestamp: ")
@@ -28,6 +32,7 @@ class MaxMinValuesView : View("Min/Max Values") {
     private val timeTurbidityMinVal = Label("Timestamp: ")
     private val timeWaterTempMinVal = Label("Timestamp: ")
 
+    // Labels für die Min-Werte der verschiedenen Sensor-Daten
     private val tempMinVal = Label("Minimum: ")
     private val humidityMinVal = Label("Minimum: ")
     private val pressureMinVal = Label("Minimum: ")
@@ -36,7 +41,7 @@ class MaxMinValuesView : View("Min/Max Values") {
     private val turbidityMinVal = Label("Minimum: ")
     private val waterTempMinVal = Label("Minimum: ")
 
-
+    // Labels für die Zeitstempel der Max-Werte der verschiedenen Sensor-Daten
     private val timeTempMaxVal = Label("Timestamp: ")
     private val timeHumidityMaxVal = Label("Timestamp: ")
     private val timePressureMaxVal = Label("Timestamp: ")
@@ -45,6 +50,7 @@ class MaxMinValuesView : View("Min/Max Values") {
     private val timeTurbidityMaxVal = Label("Timestamp: ")
     private val timeWaterTempMaxVal = Label("Timestamp: ")
 
+    // Labels für die Max-Werte der verschiedenen Sensor-Daten
     private val tempMaxVal = Label("Maximum: ")
     private val humidityMaxVal = Label("Maximum: ")
     private val pressureMaxVal = Label("Maximum: ")
@@ -53,7 +59,9 @@ class MaxMinValuesView : View("Min/Max Values") {
     private val turbidityMaxVal = Label("Maximum: ")
     private val waterTempMaxVal = Label("Maximum: ")
 
+    // Initialisierungsblock für die Konfiguration von UI-Elementen
     init {
+        // Listener für die Aktualisierung des Diagramms, wenn sich etwas ändert
         showFilteredData.addListener { _, _, newValue ->
             if (newValue) {
                 updateFilteredData()
@@ -76,6 +84,7 @@ class MaxMinValuesView : View("Min/Max Values") {
         updateAllData()
     }
 
+    // UI-Komponenten und Layout definieren
     override val root = vbox {
         paddingAll = 20.0
         alignment = Pos.CENTER
@@ -84,6 +93,7 @@ class MaxMinValuesView : View("Min/Max Values") {
             label("Values")
             padding = insets(0.0, 0.0, 10.0, 0.0)
         }
+        // UI-Elemente für Datumspicker & Filter hinzufügen
         hbox(10.0) {
             alignment = Pos.CENTER
             label("From Date:")
@@ -92,6 +102,8 @@ class MaxMinValuesView : View("Min/Max Values") {
             add(toDatepicker)
             checkbox("Filter", showFilteredData)
         }
+
+        // UI-Elemente für Sensor-Datenanzeige hinzufügen
         hbox(50.0) {
             padding = insets(50.0, 0.0, 0.0, 5.0)
             alignment = Pos.CENTER
@@ -145,9 +157,16 @@ class MaxMinValuesView : View("Min/Max Values") {
         }
     }
 
+    /**
+     * TODO: BEARBEITE DOPPELTE AUFRUFE -> FUNKTIONSERSTELLUNG UND DARÜBER LAUFEN LASSEN
+     */
+
+    // Funktion zum Aktualisieren der angezeigten Min/Max-Werte basierend auf dem Zeitraum
     private fun updateFilteredData() {
+        // Decimal Formatter für die Rundung auf zwei Nachkommastellen
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
+        // Daten filtern basierend auf dem ausgewählten Zeitraum
         val filteredData = sensorDataList.filter { it.timestamp in fromDatepicker.value.atStartOfDay()..toDatepicker.value.atTime(LocalTime.MAX) }
 
         tempMinVal.text = "Minimum: ${filteredData.minByOrNull { it.temperature!! }!!.temperature}"
@@ -186,7 +205,9 @@ class MaxMinValuesView : View("Min/Max Values") {
         timeWaterTempMaxVal.text = "at: ${filteredData.maxByOrNull { it.waterTemperature!! }!!.timestamp}"
     }
 
+    // Funktion zum Aktualisieren der angezeigten Min/Max-Werte basierend auf dem Zeitraum
     private fun updateAllData() {
+        // Decimal Formatter für die Rundung auf zwei Nachkommastellen
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
         tempMinVal.text = "Minimum: ${sensorDataList.minByOrNull { it.temperature!! }!!.temperature}"

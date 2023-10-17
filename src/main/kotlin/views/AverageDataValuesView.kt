@@ -11,14 +11,18 @@ import java.time.LocalDate
 import java.time.LocalTime
 import kotlin.math.sqrt
 
+// AverageDataValuesView erbt TornadoFX View und repräsentiert den Screen der die durchschnittlichen und Standardabweichung-Werte der Sensor-Daten ausgibt
 class AverageDataValuesView : View("Average / Standard Deviation") {
 
+    // Sensor-Datenliste aus der Datenbank laden
     private val sensorDataList = DataBaseHandler("jdbc:mysql://localhost:3306", "root", "Blubber02!").getSensorData()
 
+    // UI-Elemente und Eigenschaften für die Filterung und Anzeige von Sensor-Daten
     private val fromDatepicker = datepicker { value = LocalDate.now().minusDays(7) }
     private val toDatepicker = datepicker { value = LocalDate.now() }
     private val showFilteredData = SimpleBooleanProperty(false)
 
+    // Labels für die Durchschnittswerte der verschiedenen Sensor-Daten
     private val tempVal = Label("Average: ")
     private val humidityVal = Label("Average: ")
     private val pressureVal = Label("Average: ")
@@ -27,7 +31,7 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
     private val turbidityVal = Label("Average: ")
     private val waterTempVal = Label("Average: ")
 
-
+    // Labels für die Standardabweichung-Werte der verschiedenen Sensor-Daten
     private val tempValStd = Label("Standard Derivation: ")
     private val humidityValStd = Label("Standard Derivation: ")
     private val pressureValStd = Label("Standard Derivation: ")
@@ -35,7 +39,10 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
     private val salinityValStd = Label("Standard Derivation: ")
     private val turbidityValStd = Label("Standard Derivation: ")
     private val waterTempValStd = Label("Standard Derivation: ")
+
+    // Initialisierungsblock für die Konfiguration von UI-Elementen
     init {
+        // Listener für die Aktualisierung der Labels, wenn sich etwas ändert
         showFilteredData.addListener { _, _, newValue ->
             if (newValue) {
                 updateFilteredData()
@@ -58,14 +65,17 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
         updateAllData()
     }
 
+    // UI-Komponenten und Layout definieren
     override val root = vbox {
         paddingAll = 20.0
         alignment = Pos.CENTER
+        // Label für Schriftzug "Values" hinzufügen
         hbox(10.0) {
             alignment = Pos.TOP_CENTER
             label("Values")
             padding = insets(0.0, 0.0, 10.0, 0.0)
         }
+        // UI-Elemente für Datumspicker & Filter hinzufügen
         hbox(10.0) {
             alignment = Pos.CENTER
             label("From Date:")
@@ -74,6 +84,7 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
             add(toDatepicker)
             checkbox("Filter", showFilteredData)
         }
+        // UI-Elemente für Sensor-Datenanzeige hinzufügen
         hbox(50.0) {
             padding = insets(50.0, 0.0, 0.0, 5.0)
             alignment = Pos.CENTER
@@ -108,6 +119,7 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
         }
     }
 
+    // Erweiterungsfunktion von List<Int?> um Durchschnittswerte zu bilden und als Double zurückzugeben
     private fun List<Int?>.averageN(): Double {
         val nonNullValues = filterNotNull()
         return if (nonNullValues.isEmpty()) {
@@ -117,6 +129,7 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
         }
     }
 
+    // Erweiterungsfunktion von List<Int?> um Standardabweichung zu berechnen und diese als Double zurückzugeben
     private fun List<Int?>.standardDeviation(): Double {
         val nonNullValues = filterNotNull()
         val average = nonNullValues.averageN()
@@ -128,6 +141,7 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
         return sqrt(variance)
     }
 
+    // Funktion zum Aktualisieren der Daten auf Basis der gefilterten Sensordaten nach Zeitraum
     private fun updateFilteredData() {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
@@ -161,6 +175,7 @@ class AverageDataValuesView : View("Average / Standard Deviation") {
         waterTempValStd.text = "Standard Deviation: ${df.format(waterTemperatureValues.standardDeviation())}"
     }
 
+    // Funktion um alle Daten zu aktualisieren ohne Eingrenzung
     private fun updateAllData() {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
