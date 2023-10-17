@@ -31,8 +31,8 @@ class SensorDataGraphView : View("Data Graph") {
     private val showPressure = SimpleBooleanProperty(false)
     private val showOxygenContent = SimpleBooleanProperty(false)
     private val showSalinity = SimpleBooleanProperty(false)
-    private val showTurbidity = SimpleBooleanProperty(false)
-    private val showWaterTemperature = SimpleBooleanProperty(false)
+    private val showTurbidity = SimpleBooleanProperty(true)
+    private val showWaterTemperature = SimpleBooleanProperty(true)
 
     // Datenreihen für das Diagramm (XYChart benötigt da Diagramm per JavaFX erstellt wurde)
     private val temperatureSeries = XYChart.Series<String, Number>().apply { name = "Temperature" }

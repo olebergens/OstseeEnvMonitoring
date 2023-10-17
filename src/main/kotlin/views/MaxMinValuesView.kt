@@ -14,7 +14,7 @@ import java.time.LocalTime
 import kotlin.math.sqrt
 
 // MaxMinValuesView erbt TornadoFX View und repräsentiert den Screen der die Minima und Maxima ausgibt
-class MaxMinValuesView : View("Min/Max Values") {
+class MaxMinValuesView : View("Min / Max Values") {
     // Sensor-Datenliste aus der Datenbank laden
     private val sensorDataList = DataBaseHandler("jdbc:mysql://localhost:3306", "root", "Blubber02!").getSensorData()
 
