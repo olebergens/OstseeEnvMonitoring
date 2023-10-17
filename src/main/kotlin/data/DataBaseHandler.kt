@@ -4,8 +4,6 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.Statement
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class DataBaseHandler(private val dbUrl: String, private val username: String, private val password: String) {
     fun getSensorData(): List<SensorData> {
@@ -17,13 +15,17 @@ class DataBaseHandler(private val dbUrl: String, private val username: String, p
         try {
             connection = DriverManager.getConnection(dbUrl, username, password)
             statement = connection.createStatement()
-            resultSet = statement.executeQuery("SELECT * FROM ostseeenvmonitoring.sensor_data")
+            resultSet = statement.executeQuery("SELECT * FROM sys.sensor_data")
             while (resultSet.next()) {
                 val timeStamp = resultSet.getTimestamp("timestamp").toLocalDateTime()
                 val temperature = resultSet.getInt("temperature")
-                val humidty = resultSet.getInt("humidity")
+                val humidity = resultSet.getInt("humidity")
                 val pressure = resultSet.getInt("pressure")
-                val sensorData = SensorData(timeStamp, temperature, humidty, pressure)
+                val oxygenContent = resultSet.getInt("oxygencontent")
+                val salinity = resultSet.getInt("salinity")
+                val turbidity = resultSet.getInt("turbidity")
+                val watertemperature = resultSet.getInt("watertemperature")
+                val sensorData = SensorData(timeStamp, temperature, humidity, pressure, oxygenContent, salinity, turbidity, watertemperature)
                 sensorDataList.add(sensorData)
             }
         } catch (e: java.lang.Exception) {
