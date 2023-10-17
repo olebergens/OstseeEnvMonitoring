@@ -14,6 +14,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 class SensorDataGraphView : View("Data Graph") {
+
     private val sensorDataList = DataBaseHandler("jdbc:mysql://localhost:3306", "root", "Blubber02!").getSensorData()
     private val fromDatepicker = datepicker { value = LocalDate.now().minusDays(7) }
     private val toDatepicker = datepicker { value = LocalDate.now() }
