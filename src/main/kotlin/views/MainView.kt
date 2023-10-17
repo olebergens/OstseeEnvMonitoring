@@ -5,7 +5,7 @@ import tornadofx.View
 import tornadofx.tab
 import tornadofx.tabpane
 
-class MainView : View() {
+class MainView : View("Ostsee Environment Monitoring") {
 
     override val root = tabpane {
         tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE

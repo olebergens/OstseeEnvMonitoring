@@ -1,6 +1,7 @@
 package views
 
 import data.DataBaseHandler
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.geometry.Pos
 import tornadofx.*
 import java.time.LocalDate
@@ -10,46 +11,73 @@ class AverageDataValuesView : View("Average Values") {
 
     private val sensorDataList = DataBaseHandler("jdbc:mysql://localhost:3306", "root", "Blubber02!").getSensorData()
 
+    private val fromDatepicker = datepicker { value = LocalDate.now().minusDays(7) }
+    private val toDatepicker = datepicker { value = LocalDate.now() }
+    private val showFilteredData = SimpleBooleanProperty(false)
+
+
+    init {
+       // fromDatepicker.valueProperty().addListener { _, _, _ -> if (showFilteredData.get()) update() }
+        //toDatepicker.valueProperty().addListener { _, _, _ -> if (showFilteredData.get()) update() }
+
+    }
+
     override val root = vbox {
         paddingAll = 20.0
         alignment = Pos.CENTER
-
-        label("Average Values")
+        hbox(10.0) {
+            alignment = Pos.TOP_CENTER
+            label("Values")
+            padding = insets(0.0, 0.0, 10.0, 0.0)
+        }
         hbox(10.0) {
             alignment = Pos.CENTER
             label("From Date:")
-            val fromDatepicker = datepicker { value = LocalDate.now().minusDays(7)}
+            add(fromDatepicker)
             label("To Date:")
-            val toDatepicker = datepicker { value = LocalDate.now() }
-            button("Show") {
-                action {
-                    val startDate = fromDatepicker.value.atStartOfDay()
-                    val endDate = fromDatepicker.value.atStartOfDay().plusDays(1)
+            add(toDatepicker)
+        }
+        vbox(30.0) {
+            padding = insets(50.0, 0.0, 0.0, 5.0)
+            alignment = Pos.CENTER_LEFT
+            hbox(50.0){
+                label("Temperature")
 
-                    val filteredData = sensorDataList.filter { it.timestamp in startDate..endDate}
-
-                    val temperatureData = filteredData.mapNotNull { it.temperature }
-                    val humidityData = filteredData.mapNotNull { it.humidity }
-                    val pressureData = filteredData.mapNotNull { it.pressure }
-
-                    val temperatureAverage = temperatureData.average()
-                    val humidityAverage = humidityData.average()
-                    val pressureAverage = pressureData.average()
-
-                    val temperatureStdDev = temperatureData.standardDeviation()
-                    val humidityStdDev = humidityData.standardDeviation()
-                    val pressureStdDev = pressureData.standardDeviation()
-
-                    label("Temperature: Average = ${temperatureAverage}, Standard Deviation = ${temperatureStdDev}")
-                    label("Humidity: Average = ${humidityAverage}, Standard Deviation = ${humidityStdDev}")
-                    label("Pressure: Average = ${pressureAverage}, Standard Deviation = ${pressureStdDev}")
-
-                }
+            }
+            hbox(50.0) {
+                label("Humidity")
+                label("Timestamp: ")
+                label("Value: ")
+            }
+            hbox(50.0) {
+                label("Pressure")
+                label("Timestamp: ")
+                label("Value: ")
+            }
+            hbox(50.0) {
+                label("Oxygen Content")
+                label("Timestamp: ")
+                label("Value: ")
+            }
+            hbox(50.0) {
+                label("Salinity")
+                label("Timestamp: ")
+                label("Value: ")
+            }
+            hbox(50.0) {
+                label("Turbidity")
+                label("Timestamp: ")
+                label("Value: ")
+            }
+            hbox(50.0) {
+                label("Water Temperature")
+                label("Timestamp: ")
+                label("Value: ")
             }
         }
     }
 
-    private fun List<Double>.average(): Double {
+    private fun List<Double>.averageN(): Double {
         return if (isEmpty()) {
             0.0
         } else {

@@ -6,15 +6,10 @@ import data.SensorData
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
-import javafx.scene.Node
 import javafx.scene.chart.CategoryAxis
 import javafx.scene.chart.NumberAxis
 import javafx.scene.chart.XYChart
-import javafx.scene.control.Tooltip
-import javafx.scene.shape.Circle
 import tornadofx.*
-import java.awt.Checkbox
-import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -24,13 +19,13 @@ class SensorDataGraphView : View("Data Graph") {
     private val toDatepicker = datepicker { value = LocalDate.now() }
     private val showFilteredData = SimpleBooleanProperty(false)
 
-    private val showTemperature = SimpleBooleanProperty(true)
-    private val showHumidity = SimpleBooleanProperty(true)
-    private val showPressure = SimpleBooleanProperty(true)
-    private val showOxygenContent = SimpleBooleanProperty(true)
-    private val showSalinity = SimpleBooleanProperty(true)
-    private val showTurbidity = SimpleBooleanProperty(true)
-    private val showWaterTemperature = SimpleBooleanProperty(true)
+    private val showTemperature = SimpleBooleanProperty(false)
+    private val showHumidity = SimpleBooleanProperty(false)
+    private val showPressure = SimpleBooleanProperty(false)
+    private val showOxygenContent = SimpleBooleanProperty(false)
+    private val showSalinity = SimpleBooleanProperty(false)
+    private val showTurbidity = SimpleBooleanProperty(false)
+    private val showWaterTemperature = SimpleBooleanProperty(false)
 
     private val temperatureSeries = XYChart.Series<String, Number>().apply { name = "Temperature" }
     private val humiditySeries = XYChart.Series<String, Number>().apply { name = "Humidity" }
@@ -137,13 +132,27 @@ class SensorDataGraphView : View("Data Graph") {
         sensorDataList.forEach { sensorData ->
             val localDateTime = sensorData.timestamp
             if (isDataValid(sensorData) && isDateInRange(localDateTime)) {
-                addDataPointIfValid(showTemperature, temperatureSeries, sensorData.temperature, localDateTime)
-                addDataPointIfValid(showHumidity, humiditySeries, sensorData.humidity, localDateTime)
-                addDataPointIfValid(showPressure, pressureSeries, sensorData.pressure, localDateTime)
-                addDataPointIfValid(showOxygenContent, oxygenContentSeries, sensorData.oxygenContent, localDateTime)
-                addDataPointIfValid(showSalinity, salinitySeries, sensorData.salinity, localDateTime)
-                addDataPointIfValid(showTurbidity, turbiditySeries, sensorData.turbidity, localDateTime)
-                addDataPointIfValid(showWaterTemperature, waterTemperatureSeries, sensorData.waterTemperature, localDateTime)
+                if (showTemperature.value && sensorData.temperature != null) {
+                    temperatureSeries.data.add(XYChart.Data(localDateTime.toString(), sensorData.temperature.toDouble()))
+                }
+                if (showHumidity.value && sensorData.humidity != null) {
+                    humiditySeries.data.add(XYChart.Data(localDateTime.toString(), sensorData.humidity.toDouble()))
+                }
+                if (showPressure.value && sensorData.pressure != null) {
+                    pressureSeries.data.add(XYChart.Data(localDateTime.toString(), sensorData.pressure.toDouble()))
+                }
+                if (showOxygenContent.value && sensorData.oxygenContent != null) {
+                    oxygenContentSeries.data.add(XYChart.Data(localDateTime.toString(), sensorData.oxygenContent.toDouble()))
+                }
+                if (showSalinity.value && sensorData.salinity != null) {
+                    salinitySeries.data.add(XYChart.Data(localDateTime.toString(), sensorData.salinity.toDouble()))
+                }
+                if (showTurbidity.value && sensorData.turbidity != null) {
+                    turbiditySeries.data.add(XYChart.Data(localDateTime.toString(), sensorData.turbidity.toDouble()))
+                }
+                if (showWaterTemperature.value && sensorData.waterTemperature != null) {
+                    waterTemperatureSeries.data.add(XYChart.Data(localDateTime.toString(), sensorData.waterTemperature.toDouble()))
+                }
             }
         }
 
@@ -154,23 +163,6 @@ class SensorDataGraphView : View("Data Graph") {
         salinitySeries.node.isVisible = showSalinity.value
         turbiditySeries.node.isVisible = showTurbidity.value
         waterTemperatureSeries.node.isVisible = showWaterTemperature.value
-    }
-
-    private fun addDataPointIfValid(checkbox: SimpleBooleanProperty, series: XYChart.Series<String, Number>, value: Number?, timestamp: LocalDateTime) {
-        if (checkbox.value && value != null) {
-            val dataPoint = XYChart.Data(timestamp.toString(), value)
-            series.data.add(dataPoint)
-            dataPoint.node = createDataNode(series.name, dataPoint)
-        }
-    }
-
-    private fun createDataNode(seriesName: String, dataPoint: XYChart.Data<String, Number>): Node {
-        val node = Circle(5.0)
-        val tooltip = Tooltip("$seriesName\n Timestamp: ${dataPoint.xValue}\n Value: ${dataPoint.yValue}")
-        Tooltip.install(node, tooltip)
-        node.setOnMouseEntered { tooltip.show(node, it.screenX, it.screenY) }
-        node.setOnMouseExited { tooltip.hide() }
-        return node
     }
     private fun isDataValid(sensorData: SensorData): Boolean {
         return (sensorData.temperature != null || sensorData.humidity != null || sensorData.pressure != null)
